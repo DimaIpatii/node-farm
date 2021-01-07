@@ -1,6 +1,7 @@
 const fs = require('fs');
 const url = require('url');
 const http = require('http');
+const replaceTemplate = require('./modules/replaceTemplate');
 
 // Template Elements:
 const mainPage  = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
@@ -11,22 +12,6 @@ const productCardFull = fs.readFileSync(`${__dirname}/templates/template-product
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const productList = JSON.parse(data);
 
-// Helpers:
-function generateProducts (card, product){
-    let output = card.replace(/{%PRODUCT_NAME%}/g, product.name);
-    output = output.replace(/{%PRODUCT_ID%}/g, product.id);
-    output = output.replace(/{%PRODUCT_IMAGE%}/g, product.image);
-    output = output.replace(/{%PRODUCT_NUTRIENTS%}/g, product.nutrients);
-    output = output.replace(/{%PRODUCT_QUANTITY%}/g, product.quantity);
-    output = output.replace(/{%PRODUCT_PRICE%}/g, product.price);
-    output = output.replace(/{%PRODUCT_FROM%}/g, product.from);
-    output = output.replace(/{%PRODUCT_DESCRIPTION%}/g, product.description);
-
-    if(!product.organic) output = output.replace(/{%NON_ORGANIC%}/g,'not-organic');
-    return output;
-}
-
-
 // Server:
 // Request/Response:
 const server = http.createServer((request,response) => {
@@ -35,15 +20,17 @@ const server = http.createServer((request,response) => {
     switch(true){
         // Home page:
         case pathname === '/' || pathname === '/overview':
-            const products = productList.map(listItem => generateProducts(productCard, listItem)).join('');
+            response.writeHead(200, {'Content-type' : 'text/html'});
+            const products = productList.map(listItem => replaceTemplate(productCard, listItem)).join('');
             const overviewPage = mainPage.replace(/{%PRODUCT_CARD%}/,products);
 
             response.end(overviewPage);
             break;
         // Overview Page:
         case pathname === '/product':
+            response.writeHead(200, {'Content-type' : 'text/html'});
             const product = productList[query.id];
-            const productDetailsPage = generateProducts(productCardFull, product);
+            const productDetailsPage = replaceTemplate(productCardFull, product);
             response.end(productDetailsPage);
             break;
     // Error Page:
