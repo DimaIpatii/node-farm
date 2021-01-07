@@ -1,0 +1,28 @@
+{
+  "name": "node-farm",
+  "version": "1.0.0",
+  "description": "Building Node.js App",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/DimaIpatii/node-farm.git"
+  },
+  "keywords": [
+    "node-farm"
+  ],
+  "author": "Ipatii Dmytro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DimaIpatii/node-farm/issues"
+  },
+  "homepage": "https://github.com/DimaIpatii/node-farm#readme",
+  "dependencies": {
+    "slugify": "^1.4.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
